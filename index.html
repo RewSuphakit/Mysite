@@ -277,37 +277,76 @@
     }
 
     /* ─── SKILLS ─── */
-    .skill-item { margin-bottom: 1.5rem; }
-    .skill-meta {
+    .skill-item {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: .75rem;
-      color: var(--muted);
-      margin-bottom: .5rem;
-    }
-    .skill-track {
-      height: 3px;
-      background: var(--border);
+      padding: .9rem 1.1rem;
+      border: 1px solid var(--border);
+      margin-bottom: .75rem;
+      background: var(--card);
       position: relative;
       overflow: hidden;
+      transition: border-color .3s;
     }
-    .skill-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      width: 0;
-      transition: width 1.2s cubic-bezier(.17,.67,.4,1.2);
-      position: relative;
-    }
-    .skill-fill::after {
+    .skill-item:hover { border-color: rgba(100,255,218,.3); }
+    .skill-item::before {
       content: '';
       position: absolute;
-      right: 0; top: -4px;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
+      left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, rgba(100,255,218,.06), transparent);
+      width: var(--fill, 0%);
+      transition: width 1.2s cubic-bezier(.17,.67,.4,1.2);
     }
+    .skill-name {
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      color: var(--text);
+      letter-spacing: 1px;
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: .7rem;
+    }
+    .skill-name i { color: var(--accent); font-size: .9rem; }
+    .skill-level {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .level-dots {
+      display: flex; gap: 5px;
+    }
+    .level-dot {
+      width: 8px; height: 8px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      transition: background .3s, border-color .3s, box-shadow .3s;
+    }
+    .level-dot.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+    .level-dot.on.mid {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      box-shadow: 0 0 6px var(--accent2);
+    }
+    .level-dot.on.low {
+      background: #ffb86c;
+      border-color: #ffb86c;
+      box-shadow: 0 0 6px #ffb86c;
+    }
+    .level-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      min-width: 80px;
+      text-align: right;
+    }
+    .level-label.expert   { color: var(--accent); }
+    .level-label.advanced { color: var(--accent2); }
+    .level-label.inter    { color: var(--accent2); }
+    .level-label.beginner { color: #ffb86c; }
 
     /* ─── PROGRAMS ─── */
     .prog-grid {
@@ -542,23 +581,78 @@
         </div>
       </div>
 
-      <div class="reveal">
+      <div class="reveal" id="skills-block">
         <p class="section-label" style="margin-bottom:1.5rem">Skills</p>
-        <div class="skill-item">
-          <div class="skill-meta"><span>HTML</span><span>100%</span></div>
-          <div class="skill-track"><div class="skill-fill" data-w="100"></div></div>
+
+        <!-- level: expert=5dots, advanced=4, intermediate=3, beginner=2 -->
+        <div class="skill-item" style="--fill:100%">
+          <div class="skill-name"><i class="fab fa-html5"></i> HTML</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on" data-tier="expert"></div>
+              <div class="level-dot on" data-tier="expert"></div>
+              <div class="level-dot on" data-tier="expert"></div>
+              <div class="level-dot on" data-tier="expert"></div>
+              <div class="level-dot on" data-tier="expert"></div>
+            </div>
+            <span class="level-label expert">Expert</span>
+          </div>
         </div>
-        <div class="skill-item">
-          <div class="skill-meta"><span>CSS</span><span>70%</span></div>
-          <div class="skill-track"><div class="skill-fill" data-w="70"></div></div>
+
+        <div class="skill-item" style="--fill:70%">
+          <div class="skill-name"><i class="fab fa-css3-alt"></i> CSS</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot" data-tier="advanced"></div>
+            </div>
+            <span class="level-label advanced">Advanced</span>
+          </div>
         </div>
-        <div class="skill-item">
-          <div class="skill-meta"><span>JavaScript</span><span>60%</span></div>
-          <div class="skill-track"><div class="skill-fill" data-w="60"></div></div>
+
+        <div class="skill-item" style="--fill:60%">
+          <div class="skill-name"><i class="fab fa-js-square"></i> JavaScript</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on mid" data-tier="inter"></div>
+              <div class="level-dot on mid" data-tier="inter"></div>
+              <div class="level-dot on mid" data-tier="inter"></div>
+              <div class="level-dot" data-tier="inter"></div>
+              <div class="level-dot" data-tier="inter"></div>
+            </div>
+            <span class="level-label inter">Intermediate</span>
+          </div>
         </div>
-        <div class="skill-item">
-          <div class="skill-meta"><span>PHP</span><span>70%</span></div>
-          <div class="skill-track"><div class="skill-fill" data-w="70"></div></div>
+
+        <div class="skill-item" style="--fill:70%">
+          <div class="skill-name"><i class="fab fa-php"></i> PHP</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot on mid" data-tier="advanced"></div>
+              <div class="level-dot" data-tier="advanced"></div>
+            </div>
+            <span class="level-label advanced">Advanced</span>
+          </div>
+        </div>
+
+        <div class="skill-item" style="--fill:40%">
+          <div class="skill-name"><i class="fas fa-database"></i> MySQL</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on low" data-tier="beginner"></div>
+              <div class="level-dot on low" data-tier="beginner"></div>
+              <div class="level-dot" data-tier="beginner"></div>
+              <div class="level-dot" data-tier="beginner"></div>
+              <div class="level-dot" data-tier="beginner"></div>
+            </div>
+            <span class="level-label beginner">Beginner</span>
+          </div>
         </div>
       </div>
     </div>
@@ -657,14 +751,23 @@ function revealElements() {
 }
 revealElements();
 
-// ── Skill bars ──
+// ── Skill level animation ──
 let skillsAnimated = false;
 function animateSkills() {
   if (skillsAnimated) return;
-  const section = document.getElementById('about');
-  if (section.getBoundingClientRect().top < window.innerHeight - 100) {
-    document.querySelectorAll('.skill-fill').forEach(el => {
-      el.style.width = el.dataset.w + '%';
+  const block = document.getElementById('skills-block');
+  if (!block) return;
+  if (block.getBoundingClientRect().top < window.innerHeight - 60) {
+    // trigger the ::before fill via CSS custom property (already set inline)
+    document.querySelectorAll('.skill-item').forEach((el, i) => {
+      setTimeout(() => {
+        el.style.setProperty('--fill', el.style.getPropertyValue('--fill') || '0%');
+        // animate dots
+        el.querySelectorAll('.level-dot.on').forEach((dot, j) => {
+          dot.style.opacity = '0';
+          setTimeout(() => { dot.style.opacity = '1'; }, j * 120);
+        });
+      }, i * 120);
     });
     skillsAnimated = true;
   }
