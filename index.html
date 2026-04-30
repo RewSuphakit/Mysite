@@ -153,20 +153,114 @@
     /* ─── HERO ─── */
     #hero {
       min-height: 100vh;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
       padding: 0 4rem;
       position: relative;
       overflow: hidden;
+      gap: 2rem;
     }
+
+    /* ─── HERO RIGHT VISUAL ─── */
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 500px;
+    }
+    /* Orbit rings */
+    .orbit {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(100,255,218,.12);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      animation: spin linear infinite;
+    }
+    .orbit:nth-child(1) { width: 300px; height: 300px; animation-duration: 20s; border-color: rgba(100,255,218,.12); }
+    .orbit:nth-child(2) { width: 200px; height: 200px; animation-duration: 14s; animation-direction: reverse; border-color: rgba(123,140,255,.15); }
+    .orbit:nth-child(3) { width: 420px; height: 420px; animation-duration: 30s; border-color: rgba(100,255,218,.06); border-style: dashed; }
+
+    /* Orbit dots */
+    .orbit::before {
+      content: '';
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      top: -4px; left: 50%;
+      transform: translateX(-50%);
+    }
+    .orbit:nth-child(1)::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .orbit:nth-child(2)::before { background: var(--accent2); box-shadow: 0 0 10px var(--accent2); }
+    .orbit:nth-child(3)::before { background: rgba(100,255,218,.4); box-shadow: 0 0 8px var(--accent); }
+
+    @keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+    /* Center avatar/code block */
+    .hero-code-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(14,20,32,.9);
+      border: 1px solid rgba(100,255,218,.2);
+      padding: 1.5rem;
+      width: 240px;
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      line-height: 1.8;
+      box-shadow: 0 0 40px rgba(100,255,218,.05), inset 0 0 40px rgba(0,0,0,.3);
+      animation: floatCard 4s ease-in-out infinite;
+    }
+    @keyframes floatCard {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-12px); }
+    }
+    .code-line { display: flex; gap: .5rem; }
+    .code-k  { color: var(--accent2); }
+    .code-v  { color: var(--accent); }
+    .code-s  { color: #ffb86c; }
+    .code-c  { color: var(--muted); }
+    .code-brace { color: var(--text); }
+    /* blinking cursor inside card */
+    .code-cursor {
+      display: inline-block;
+      width: 7px; height: 1em;
+      background: var(--accent);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      opacity: .8;
+    }
+    @keyframes blink { 0%,100%{opacity:.8} 50%{opacity:0} }
+
+    /* floating badges around card */
+    .float-badge {
+      position: absolute;
+      background: rgba(14,20,32,.95);
+      border: 1px solid var(--border);
+      padding: .4rem .8rem;
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--muted);
+      white-space: nowrap;
+      animation: floatCard 4s ease-in-out infinite;
+    }
+    .float-badge i { color: var(--accent); margin-right: .4rem; }
+    .float-badge:nth-child(4) { top: 8%; right: 5%; animation-delay: -.5s; border-color: rgba(100,255,218,.2); color: var(--accent); }
+    .float-badge:nth-child(5) { bottom: 12%; left: 4%; animation-delay: -1.2s; border-color: rgba(123,140,255,.2); color: var(--accent2); }
+    .float-badge:nth-child(6) { top: 55%; right: 2%; animation-delay: -2s; }
     #particles-canvas {
       position: absolute;
       inset: 0;
       z-index: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
     }
     .hero-bg {
       position: absolute;
       inset: 0;
+      z-index: 0;
       background:
         radial-gradient(ellipse 60% 60% at 70% 50%, rgba(100,255,218,.07) 0%, transparent 60%),
         radial-gradient(ellipse 40% 40% at 20% 80%, rgba(123,140,255,.09) 0%, transparent 50%);
@@ -728,7 +822,8 @@
       .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,12,20,.97); padding: 2rem; gap: 1.5rem; }
       .nav-links.open { display: flex; }
       .hamburger { display: flex; }
-      #hero { padding: 0 1.5rem; }
+      #hero { padding: 0 1.5rem; grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
       section { padding: 4rem 1.5rem; }
       .about-grid { grid-template-columns: 1fr; }
       .about-img-wrap { margin: 0 auto; }
@@ -775,6 +870,8 @@
   <canvas id="particles-canvas"></canvas>
   <div class="hero-bg"></div>
   <div class="hero-grid" id="heroGrid"></div>
+
+  <!-- LEFT -->
   <div class="hero-content">
     <p class="hero-tag">// Full-Stack Developer</p>
     <h1 class="hero-name" id="heroName" data-text="">
@@ -786,6 +883,29 @@
       <a href="https://github.com/RewSuphakit" target="_blank" class="btn-secondary-c magnetic"><i class="fab fa-github" style="margin-right:.5rem"></i>GitHub</a>
     </div>
   </div>
+
+  <!-- RIGHT -->
+  <div class="hero-visual">
+    <div class="orbit"></div>
+    <div class="orbit"></div>
+    <div class="orbit"></div>
+    <div class="float-badge"><i class="fab fa-html5"></i>HTML Expert</div>
+    <div class="float-badge"><i class="fab fa-js-square"></i>JavaScript</div>
+    <div class="float-badge"><i class="fab fa-php"></i>PHP Dev</div>
+    <div class="hero-code-card">
+      <div class="code-line"><span class="code-k">const</span><span style="color:var(--text)"> dev</span><span class="code-brace"> = {</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-s">name</span><span class="code-c">:</span><span class="code-v"> "Rew"</span><span class="code-c">,</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-s">role</span><span class="code-c">:</span><span class="code-v"> "Full-Stack"</span><span class="code-c">,</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-s">age</span><span class="code-c">:</span><span class="code-v"> 20</span><span class="code-c">,</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-s">skills</span><span class="code-c">: [</span></div>
+      <div class="code-line" style="padding-left:2rem"><span class="code-v">"HTML"</span><span class="code-c">, </span><span class="code-v">"CSS"</span><span class="code-c">,</span></div>
+      <div class="code-line" style="padding-left:2rem"><span class="code-v">"PHP"</span><span class="code-c">, </span><span class="code-v">"MySQL"</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-c">],</span></div>
+      <div class="code-line" style="padding-left:1rem"><span class="code-s">status</span><span class="code-c">:</span><span class="code-v"> "Open"</span></div>
+      <div class="code-line"><span class="code-brace">}</span><span class="code-cursor"></span></div>
+    </div>
+  </div>
+
   <a href="#about" class="hero-scroll">
     <span>Scroll</span>
     <i class="fas fa-arrow-down"></i>
