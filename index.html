@@ -546,6 +546,22 @@
     .level-dot.on.mid { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
     .level-dot.on.low { background: #ffb86c; border-color: #ffb86c; box-shadow: 0 0 6px #ffb86c; }
     .skill-item:hover .level-dot.on { transform: scale(1.3); }
+
+    /* Vibe coding special glow */
+    .skill-vibe {
+      border-color: rgba(192,132,252,.2) !important;
+      background: rgba(192,132,252,.03);
+    }
+    .skill-vibe::before {
+      background: linear-gradient(90deg, rgba(192,132,252,.1), transparent) !important;
+    }
+    .skill-vibe .skill-name { color: #e2bfff; }
+    .skill-vibe .skill-name i { color: #c084fc; }
+    @keyframes vibeGlow {
+      0%,100% { box-shadow: 0 0 8px #c084fc; }
+      50%      { box-shadow: 0 0 20px #c084fc, 0 0 40px rgba(192,132,252,.3); }
+    }
+    .skill-vibe:hover { border-color: rgba(192,132,252,.5) !important; }
     .level-label {
       font-family: var(--font-mono);
       font-size: .65rem;
@@ -899,7 +915,8 @@
       <div class="code-line" style="padding-left:1rem"><span class="code-s">age</span><span class="code-c">:</span><span class="code-v"> 20</span><span class="code-c">,</span></div>
       <div class="code-line" style="padding-left:1rem"><span class="code-s">skills</span><span class="code-c">: [</span></div>
       <div class="code-line" style="padding-left:2rem"><span class="code-v">"HTML"</span><span class="code-c">, </span><span class="code-v">"CSS"</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:2rem"><span class="code-v">"PHP"</span><span class="code-c">, </span><span class="code-v">"MySQL"</span></div>
+      <div class="code-line" style="padding-left:2rem"><span class="code-v">"PHP"</span><span class="code-c">, </span><span class="code-v">"MySQL"</span><span class="code-c">,</span></div>
+      <div class="code-line" style="padding-left:2rem"><span class="code-v">"React"</span><span class="code-c">, </span><span class="code-v">"Node.js"</span></div>
       <div class="code-line" style="padding-left:1rem"><span class="code-c">],</span></div>
       <div class="code-line" style="padding-left:1rem"><span class="code-s">status</span><span class="code-c">:</span><span class="code-v"> "Open"</span></div>
       <div class="code-line"><span class="code-brace">}</span><span class="code-cursor"></span></div>
@@ -933,7 +950,7 @@
           <div class="stat-label">Projects Done</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" data-target="5">0</div>
+          <div class="stat-num" data-target="8">0</div>
           <div class="stat-label">Skills</div>
         </div>
       </div>
@@ -1001,6 +1018,36 @@
               <div class="level-dot on low"></div><div class="level-dot on low"></div><div class="level-dot"></div><div class="level-dot"></div><div class="level-dot"></div>
             </div>
             <span class="level-label beginner">Beginner</span>
+          </div>
+        </div>
+
+        <div class="skill-item" style="--fill:55%">
+          <div class="skill-name"><i class="fab fa-react"></i> React</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div><div class="level-dot"></div>
+            </div>
+            <span class="level-label inter">Intermediate</span>
+          </div>
+        </div>
+
+        <div class="skill-item" style="--fill:50%">
+          <div class="skill-name"><i class="fab fa-node-js"></i> Node.js</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div><div class="level-dot"></div>
+            </div>
+            <span class="level-label inter">Intermediate</span>
+          </div>
+        </div>
+
+        <div class="skill-item skill-vibe" style="--fill:90%">
+          <div class="skill-name"><i class="fas fa-wand-magic-sparkles"></i> Vibe Coding</div>
+          <div class="skill-level">
+            <div class="level-dots">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on" style="background:#c084fc;border-color:#c084fc;box-shadow:0 0 8px #c084fc"></div>
+            </div>
+            <span class="level-label" style="color:#c084fc">Pro Viber</span>
           </div>
         </div>
       </div>
