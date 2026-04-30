@@ -1,303 +1,693 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="th">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rew — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+Thai:wght@300;400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+  <style>
+    :root {
+      --bg: #080c14;
+      --bg2: #0e1420;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --accent: #64ffda;
+      --accent2: #7b8cff;
+      --text: #ccd6f6;
+      --muted: #8892b0;
+      --white: #e6f1ff;
+      --font-head: 'Bebas Neue', cursive;
+      --font-mono: 'Space Mono', monospace;
+      --font-body: 'Noto Sans Thai', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: .5;
+    }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: transparent;
+      transition: background .4s, backdrop-filter .4s;
+    }
+    nav.scrolled {
+      background: rgba(8,12,20,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: var(--white);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      transition: color .3s;
+    }
+    .nav-links a::before {
+      content: attr(data-num);
+      color: var(--accent);
+      margin-right: .4rem;
+      font-size: .65rem;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--accent); display: block; transition: .3s; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 50%, rgba(100,255,218,.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(123,140,255,.08) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(100,255,218,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,255,218,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .8s .2s both;
+    }
+    .hero-name {
+      font-family: var(--font-head);
+      font-size: clamp(4rem, 10vw, 8rem);
+      line-height: .95;
+      color: var(--white);
+      letter-spacing: 4px;
+      animation: fadeUp .8s .4s both;
+    }
+    .hero-name .accent { color: var(--accent); }
+    .hero-typed {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin: 1.5rem 0 2.5rem;
+      animation: fadeUp .8s .6s both;
+    }
+    .hero-typed span { color: var(--accent2); }
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp .8s .8s both;
+    }
+    .btn-primary-c {
+      padding: .8rem 2rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .3s;
+    }
+    .btn-primary-c::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateX(-101%);
+      transition: transform .3s;
+    }
+    .btn-primary-c:hover { color: var(--bg); }
+    .btn-primary-c:hover::before { transform: translateX(0); }
+    .btn-primary-c span { position: relative; z-index: 1; }
+    .btn-secondary-c {
+      padding: .8rem 2rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color .3s, color .3s;
+    }
+    .btn-secondary-c:hover { border-color: var(--accent2); color: var(--accent2); }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: 2px;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll i { color: var(--accent); }
+
+    /* ─── SECTIONS ─── */
+    section {
+      padding: 6rem 4rem;
+      position: relative;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--accent);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--white);
+      letter-spacing: 3px;
+      margin-bottom: 3rem;
+    }
+    .section-title .dim {
+      color: var(--border);
+      -webkit-text-stroke: 1px rgba(255,255,255,.15);
+    }
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin-bottom: 3rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img-wrap img {
+      width: 100%;
+      max-width: 360px;
+      display: block;
+      filter: grayscale(20%);
+      border-radius: 2px;
+    }
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      top: 12px; left: 12px;
+      z-index: 0;
+    }
+    .about-img-wrap img { position: relative; z-index: 1; }
+    .info-list { list-style: none; margin-bottom: 2rem; }
+    .info-list li {
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .95rem;
+      display: flex; gap: 1rem;
+    }
+    .info-list li .lbl {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+      min-width: 100px;
+      text-transform: uppercase;
+    }
+
+    /* ─── SKILLS ─── */
+    .skill-item { margin-bottom: 1.5rem; }
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .skill-track {
+      height: 3px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0;
+      transition: width 1.2s cubic-bezier(.17,.67,.4,1.2);
+      position: relative;
+    }
+    .skill-fill::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -4px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* ─── PROGRAMS ─── */
+    .prog-grid {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .prog-badge {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .6rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--muted);
+      transition: border-color .3s, color .3s;
+    }
+    .prog-badge:hover { border-color: var(--accent); color: var(--accent); }
+    .prog-badge img { width: 22px; height: 22px; object-fit: contain; }
+
+    /* ─── RESUME / GALLERY ─── */
+    #resume { background: var(--bg); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      aspect-ratio: 4/3;
+      background: var(--card);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease, filter .5s;
+      filter: grayscale(30%);
+    }
+    .gallery-item:hover img { transform: scale(1.08); filter: grayscale(0); }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8,12,20,.8), transparent);
+      opacity: 0;
+      transition: opacity .4s;
+      display: flex; align-items: flex-end;
+      padding: 1rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+    .gallery-num {
+      position: absolute;
+      top: .8rem; left: .8rem;
+      font-family: var(--font-head);
+      font-size: 3rem;
+      color: rgba(100,255,218,.08);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,12,20,.95);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+      backdrop-filter: blur(10px);
+    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border: 1px solid var(--border);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: color .2s;
+    }
+    .lightbox-close:hover { color: var(--accent); }
+
+    /* ─── SCROLL UP BUTTON ─── */
+    #scrollTop {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      width: 44px; height: 44px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 1rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      transition: background .2s, border-color .2s;
+    }
+    #scrollTop:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    #scrollTop.visible { display: flex; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer p { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+    .social-links { display: flex; gap: 1rem; }
+    .social-links a {
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: .9rem;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .social-links a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,12,20,.97); padding: 2rem; gap: 1.5rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      #hero { padding: 0 1.5rem; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-img-wrap { margin: 0 auto; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
 </head>
-<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<body>
 
-<body class="body">
-    <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="" tabindex="0">
-        <div class=scroll-up "">
-            <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">REW<span>.</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero"   data-num="01">Home</a></li>
+    <li><a href="#about"  data-num="02">About</a></li>
+    <li><a href="#resume" data-num="03">Resume</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <p class="hero-tag">// Full-Stack Developer</p>
+    <h1 class="hero-name">
+      <span id="typed-name"></span>
+    </h1>
+    <p class="hero-typed"><span id="typed-role"></span></p>
+    <div class="hero-btns">
+      <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank" class="btn-primary-c"><span><i class="fab fa-facebook" style="margin-right:.5rem"></i>Facebook</span></a>
+      <a href="https://github.com/RewSuphakit" target="_blank" class="btn-secondary-c"><i class="fab fa-github" style="margin-right:.5rem"></i>GitHub</a>
+    </div>
+  </div>
+  <a href="#about" class="hero-scroll">
+    <span>Scroll</span>
+    <i class="fas fa-arrow-down"></i>
+  </a>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">02 — About</div>
+  <h2 class="section-title">Who Am <span class="dim">I</span></h2>
+  <div class="divider reveal"></div>
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <img src="img/AA.png" alt="Suphakit" onerror="this.src='https://placehold.co/360x400/0e1420/64ffda?text=REW'">
+    </div>
+    <div>
+      <ul class="info-list reveal">
+        <li><span class="lbl">Name</span><span>นาย ศุภกิจ หล่มเหลา</span></li>
+        <li><span class="lbl">Nickname</span><span>ริว (Rew)</span></li>
+        <li><span class="lbl">Age</span><span>20 ปี</span></li>
+        <li><span class="lbl">Department</span><span>เทคโนโลยีสารสนเทศ (IT)</span></li>
+        <li><span class="lbl">College</span><span>วิทยาลัยเทคนิคขอนแก่น</span></li>
+      </ul>
+
+      <div class="reveal" style="margin-bottom:2rem">
+        <p class="section-label" style="margin-bottom:1rem">Programs</p>
+        <div class="prog-grid">
+          <div class="prog-badge"><img src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png" alt="VSCode"> VS Code</div>
+          <div class="prog-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Adobe_Photoshop_CS6_icon.png" alt="PS"> Photoshop</div>
+          <div class="prog-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Adobe_Premiere_Pro_CS6_Icon.png" alt="PR"> Premiere</div>
+          <div class="prog-badge"><img src="https://cdn.icon-icons.com/icons2/1381/PNG/512/xampp_94513.png" alt="XAMPP"> XAMPP</div>
         </div>
-        <div class="main" id="section1">
+      </div>
 
-            <header class="container">
-                <nav id="navbar-example2" class="navbar navbar-expand-lg navbar-light fixed-top">
-                    <div class="container">
-                        <div class="navbar-brand " href="#">
-                            <h1><b><font color="#000">Portfolio</font></b></h1>
-                        </div>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                            <ul class="navbar-nav ms-auto ">
-                                <!-- Add ms-auto class here -->
-                                <li class="nav-item">
-                                    <a class="nav-link " aria-current="page" href="index.html">
-                                        <h5>Home</h5>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="project.html">
-                                        <h5>JS Project </h5>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="api.html">
-                                        <h5>API</h5>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="chart.html">
-                                        <h5>Chart</h5>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#section3">
-                                        <h5>About</h5>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#section4">
-                                        <h5>Resume</h5>
-                                    </a>
-                                </li>
-
-
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-                <div class="hero">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h1><strong><span id="name" class="w3-animate-opacity"></span></strong></h1>
-                            <h3><span id="element" class="w3-animate-left"></span></h3>
-                            <a href="https://www.facebook.com/profile.php?id=100010516696466" class="btn btn-outline-primary w3-animate-left"><i class="fab fa-facebook"></i> FACEBOOK</a>
-                            <a href="https://github.com/RewSuphakit" class="btn btn-outline-dark w3-animate-right"><i class="fab fa-github"></i> GITHUB</a>
-                        </div>
-
-                        <div class="col-md-6">
-                            <img src="img/PO1.png" alt="My Portfolio Image" class="img-fluid   w3-animate-zoom" style="max-width: 500px;">
-                        </div>
-                    </div>
-                </div>
-
-            </header>
+      <div class="reveal">
+        <p class="section-label" style="margin-bottom:1.5rem">Skills</p>
+        <div class="skill-item">
+          <div class="skill-meta"><span>HTML</span><span>100%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="100"></div></div>
         </div>
-
-        <div class="scroll-down">
-            <a href="#section3">
-                <i class="fas fa-arrow-down"></i>
-            </a>
+        <div class="skill-item">
+          <div class="skill-meta"><span>CSS</span><span>70%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="70"></div></div>
         </div>
-
-        <div class="main" id="section2">
-            <div class="parallax">
-                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968292.png" alt="JS" width="100px" height="100px">
-            </div>
+        <div class="skill-item">
+          <div class="skill-meta"><span>JavaScript</span><span>60%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="60"></div></div>
         </div>
-        <div class="main" id="section3">
-            <br>
-            <div class="container">
-                <div class="w3-animate-opacity" align="center">
-                    <h1>About me</h1>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <center> <img src="img/AA.png" alt="My Portfolio Image" class="img-fluid profileimg w3-animate-left" width="400px" height="400px"></center>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="box w3-animate-right">
-                            <h3><strong><span id="name" class="w3-animate-opacity">about</span></strong></h3>
-
-                            <p class="text-muted w3-animate-opacity"><strong>Name:</strong>นาย.ศุภกิจ หล่มเหลา </p>
-                            <p class="text-muted w3-animate-opacity"><strong>Age:</strong> 20 ปี <strong>Nickname:</strong>ริว</p>
-                            <p class="text-muted w3-animate-opacity"><strong>department:</strong>เทคโนโลยีสารสนเทศ ( IT )</p>
-                            <p class="text-muted w3-animate-opacity"><strong>college:</strong> วิทยาลัยเทคนิคขอนแก่น</p>
-
-                        </div>
-
-                        <div class="box w3-animate-right">
-                            <h3><strong><span id="name" class="w3-animate-opacity">Program</span></strong></h3>
-
-                            <img src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png" alt="Icon progarm" class="icon">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Adobe_Photoshop_CS6_icon.png" alt="Icon progarm" class="icon">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Adobe_Premiere_Pro_CS6_Icon.png" alt="Icon progarm" class="icon">
-                            <img src="https://cdn.icon-icons.com/icons2/1381/PNG/512/xampp_94513.png" alt="Icon progarm" class="icon">
-                            <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png" alt="Icon progarm" class="icon">
-                        </div>
-
-                        <div class="box w3-animate-right">
-                            <h3><strong><span id="name" class="w3-animate-opacity">SKILLS</span></strong></h3>
-
-                            <p>HTML</p>
-                            <div class="bar">
-                                <div class="skills html">100%</div>
-                            </div>
-
-                            <p>CSS</p>
-                            <div class="bar">
-                                <div class="skills css">70%</div>
-                            </div>
-
-                            <p>JavaScript</p>
-                            <div class="bar">
-                                <div class="skills js">60%</div>
-                            </div>
-
-                            <p>PHP</p>
-                            <div class="bar">
-                                <div class="skills php">70%</div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="main" id="section4">
-                <br>
-                <div class="container">
-                    <div class="text-center">
-                        <h1>Resume</h1>
-                    </div>
-                    <div class="box">
-                        <h3><strong><span id="name" class="w3-animate-opacity">Past work</span></strong></h3>
-                        <div class="responsive" onclick="showImage('img/OP.jpg', 'Cinque Terre')">
-                            <div class="gallery">
-                                <img src="img/OP.jpg" alt="Resume" width="600" height="400">
-                            </div>
-                        </div>
-
-
-                        <div class="responsive" onclick="showImage('img/rov.jpg', 'Cinque Terre')">
-                            <div class="gallery">
-                                <img src="img/rov.jpg" alt="Resume" width="600" height="400">
-                            </div>
-                        </div>
-
-
-                        <div class="responsive" onclick="showImage('img/LL.jpg', 'Cinque Terre')">
-                            <div class="gallery">
-                                <img src="img/LL.jpg" alt="Resume" width="600" height="400">
-                            </div>
-                        </div>
-
-                        <div class="responsive" onclick="showImage('img/VB.png', 'Cinque Terre')">
-                            <div class="gallery">
-                                <img src="img/VB.png" alt="Resume" width="600" height="400">
-                            </div>
-                        </div>
-
-                        <div class="responsive" onclick="showImage('img/LD.jpg', 'Cinque Terre')">
-                            <div class="gallery">
-                                <img src="img/LD.jpg" alt="Resume" width="600" height="400">
-                            </div>
-                        </div>
-
-
-
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="skill-item">
+          <div class="skill-meta"><span>PHP</span><span>70%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-w="70"></div></div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- RESUME / GALLERY -->
+<section id="resume">
+  <div class="section-label">03 — Resume</div>
+  <h2 class="section-title">Past <span class="dim">Work</span></h2>
+  <div class="divider reveal"></div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal" onclick="openLight('img/OP.jpg')">
+      <div class="gallery-num">01</div>
+      <img src="img/OP.jpg" alt="Work 1" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+01'">
+      <div class="gallery-overlay"><span>View Project →</span></div>
+    </div>
+    <div class="gallery-item reveal" onclick="openLight('img/rov.jpg')">
+      <div class="gallery-num">02</div>
+      <img src="img/rov.jpg" alt="Work 2" onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+02'">
+      <div class="gallery-overlay"><span>View Project →</span></div>
+    </div>
+    <div class="gallery-item reveal" onclick="openLight('img/LL.jpg')">
+      <div class="gallery-num">03</div>
+      <img src="img/LL.jpg" alt="Work 3" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+03'">
+      <div class="gallery-overlay"><span>View Project →</span></div>
+    </div>
+    <div class="gallery-item reveal" onclick="openLight('img/VB.png')">
+      <div class="gallery-num">04</div>
+      <img src="img/VB.png" alt="Work 4" onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+04'">
+      <div class="gallery-overlay"><span>View Project →</span></div>
+    </div>
+    <div class="gallery-item reveal" onclick="openLight('img/LD.jpg')">
+      <div class="gallery-num">05</div>
+      <img src="img/LD.jpg" alt="Work 5" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+05'">
+      <div class="gallery-overlay"><span>View Project →</span></div>
+    </div>
+  </div>
+</section>
 
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 — ศุภกิจ หล่มเหลา (Rew) · วิทยาลัยเทคนิคขอนแก่น</p>
+  <div class="social-links">
+    <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://github.com/RewSuphakit" target="_blank"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLight(event)">
+  <span class="lightbox-close" onclick="closeLightDirect()">✕ Close</span>
+  <img src="" alt="" id="lightbox-img">
+</div>
 
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
 
+<script>
+// ── Typed.js ──
+new Typed('#typed-name', {
+  strings: ['REW.', 'SUPHAKIT.'],
+  typeSpeed: 80,
+  backDelay: 3000,
+  backSpeed: 50,
+  loop: true,
+  showCursor: true,
+  cursorChar: '_',
+});
+new Typed('#typed-role', {
+  strings: ['Full-Stack Developer', 'IT Student @ KKT', 'Web Designer'],
+  typeSpeed: 60,
+  backDelay: 2500,
+  backSpeed: 40,
+  loop: true,
+  showCursor: false,
+});
 
+// ── Scroll ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 300);
+  revealElements();
+  animateSkills();
+});
 
+// ── Reveal on scroll ──
+function revealElements() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight - 80) {
+      el.classList.add('visible');
+    }
+  });
+}
+revealElements();
 
+// ── Skill bars ──
+let skillsAnimated = false;
+function animateSkills() {
+  if (skillsAnimated) return;
+  const section = document.getElementById('about');
+  if (section.getBoundingClientRect().top < window.innerHeight - 100) {
+    document.querySelectorAll('.skill-fill').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+    skillsAnimated = true;
+  }
+}
 
-        <script>
-            // Get the button
-            let mybutton = document.getElementById("myBtn");
+// ── Lightbox ──
+function openLight(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  lb.classList.add('active');
+}
+function closeLight(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightDirect();
+}
+function closeLightDirect() {
+  document.getElementById('lightbox').classList.remove('active');
+}
 
-            // When the user scrolls down 20px from the top of the document, show the button
-            window.onscroll = function() {
-                scrollFunction()
-            };
+// ── Hamburger ──
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+</script>
 
-            function scrollFunction() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    mybutton.style.display = "block";
-                } else {
-                    mybutton.style.display = "none";
-                }
-            }
-
-            // When the user clicks on the button, scroll to the top of the document
-            function topFunction() {
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
-            }
-        </script>
-        <script>
-            function showImage(imageSrc, imageAlt) {
-                // Create a modal container
-                var modal = document.createElement('div');
-                modal.className = 'modal';
-
-                // Create an image element
-                var img = document.createElement('img');
-                img.src = imageSrc;
-                img.alt = imageAlt;
-
-                // Append the image to the modal
-                modal.appendChild(img);
-
-                // Append the modal to the body
-                document.body.appendChild(modal);
-
-                // Add 'active' class to show the modal
-                modal.classList.add('active');
-
-                // Close the modal when clicked outside the image
-                modal.addEventListener('click', function() {
-                    document.body.removeChild(modal);
-                });
-            }
-        </script>
-
-        <script>
-            var typed = new Typed('#name', {
-                strings: ['<b>Hi,i\'m<font color="#9c9eff">Rew</font></b>', '<b>Name:<font color="#9c9eff">Suphakit lomlao. </font></b>'],
-                typeSpeed: 60,
-                backDelay: 4000,
-                smartBackspace: true,
-                showCursor: true,
-                cursorChar: '<b><font color="#9c9eff">|</font></b>',
-                autoInsertCss: true,
-                loop: true
-
-            });
-            var typed = new Typed('#element', {
-                strings: ['<b><font color="#9c9eff">Full-stack Developer. </font></b>'],
-                typeSpeed: 60,
-                backDelay: 4000,
-                smartBackspace: true,
-                showCursor: true,
-                cursorChar: '<b><font color="#9c9eff">|</font></b>',
-                autoInsertCss: true,
-                loop: true
-
-            });
-        </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                window.addEventListener('scroll', function() {
-                    if (window.scrollY > 50) {
-                        document.querySelector('.navbar').classList.add('white');
-                    } else {
-                        document.querySelector('.navbar').classList.remove('white');
-                    }
-                });
-            });
-        </script>
-        <script src="https://kit.fontawesome.com/5fc2813d6b.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
-
 </html>
