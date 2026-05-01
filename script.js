@@ -12,7 +12,7 @@ new Typed('#typed-name', {
     }
 });
 new Typed('#typed-role', {
-    strings: ['Full-Stack Developer', 'IT Student @ KKT', 'Web Designer'],
+    strings: ['Full-Stack Developer', 'IT Student @ RMUTI', 'Web Designer'],
     typeSpeed: 60,
     backDelay: 2500,
     backSpeed: 40,
