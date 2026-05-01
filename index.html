@@ -1,1377 +1,329 @@
 <!doctype html>
 <html lang="th">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rew — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+Thai:wght@300;400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+Thai:wght@300;400;600;700&family=Bebas+Neue&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-
-  <style>
-    :root {
-      --bg: #080c14;
-      --bg2: #0e1420;
-      --card: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.08);
-      --accent: #64ffda;
-      --accent2: #7b8cff;
-      --text: #ccd6f6;
-      --muted: #8892b0;
-      --white: #e6f1ff;
-      --font-head: 'Bebas Neue', cursive;
-      --font-mono: 'Space Mono', monospace;
-      --font-body: 'Noto Sans Thai', sans-serif;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* ─── SCROLL PROGRESS BAR ─── */
-    #progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      width: 0%;
-      z-index: 9999;
-      transition: width .1s linear;
-      box-shadow: 0 0 8px var(--accent);
-    }
-
-    /* ─── CUSTOM CURSOR ─── */
-    #cursor-dot {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%,-50%);
-      transition: background .3s, transform .1s;
-      mix-blend-mode: screen;
-    }
-    #cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(100,255,218,.5);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9997;
-      transform: translate(-50%,-50%);
-      transition: width .3s, height .3s, border-color .3s;
-    }
-    body.cursor-hover #cursor-ring {
-      width: 60px; height: 60px;
-      border-color: var(--accent);
-    }
-    body.cursor-hover #cursor-dot {
-      transform: translate(-50%,-50%) scale(0.4);
-    }
-
-    /* ─── NOISE OVERLAY ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: .5;
-    }
-
-    /* ─── NAVBAR ─── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem 4rem;
-      background: transparent;
-      transition: background .4s, backdrop-filter .4s;
-    }
-    nav.scrolled {
-      background: rgba(8,12,20,.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: var(--font-head);
-      font-size: 2rem;
-      letter-spacing: 4px;
-      color: var(--white);
-      position: relative;
-      overflow: hidden;
-    }
-    .nav-logo span { color: var(--accent); }
-    /* scanline effect on logo */
-    .nav-logo::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0;
-      height: 2px;
-      background: rgba(100,255,218,.3);
-      top: -100%;
-      animation: scanline 3s linear infinite;
-    }
-    @keyframes scanline {
-      0%   { top: -10%; }
-      100% { top: 110%; }
-    }
-
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--font-mono);
-      font-size: .75rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      position: relative;
-      transition: color .3s;
-    }
-    .nav-links a::before {
-      content: attr(data-num);
-      color: var(--accent);
-      margin-right: .4rem;
-      font-size: .65rem;
-    }
-    .nav-links a:hover { color: var(--accent); }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-    .hamburger span { width: 24px; height: 2px; background: var(--accent); display: block; transition: .3s; }
-
-    /* ─── HERO ─── */
-    #hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 0 4rem;
-      position: relative;
-      overflow: hidden;
-      gap: 2rem;
-    }
-
-    /* ─── HERO RIGHT VISUAL ─── */
-    .hero-visual {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 500px;
-    }
-    /* Orbit rings */
-    .orbit {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(100,255,218,.12);
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      animation: spin linear infinite;
-    }
-    .orbit:nth-child(1) { width: 300px; height: 300px; animation-duration: 20s; border-color: rgba(100,255,218,.12); }
-    .orbit:nth-child(2) { width: 200px; height: 200px; animation-duration: 14s; animation-direction: reverse; border-color: rgba(123,140,255,.15); }
-    .orbit:nth-child(3) { width: 420px; height: 420px; animation-duration: 30s; border-color: rgba(100,255,218,.06); border-style: dashed; }
-
-    /* Orbit dots */
-    .orbit::before {
-      content: '';
-      position: absolute;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      top: -4px; left: 50%;
-      transform: translateX(-50%);
-    }
-    .orbit:nth-child(1)::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
-    .orbit:nth-child(2)::before { background: var(--accent2); box-shadow: 0 0 10px var(--accent2); }
-    .orbit:nth-child(3)::before { background: rgba(100,255,218,.4); box-shadow: 0 0 8px var(--accent); }
-
-    @keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
-
-    /* Center avatar/code block */
-    .hero-code-card {
-      position: relative;
-      z-index: 2;
-      background: rgba(14,20,32,.9);
-      border: 1px solid rgba(100,255,218,.2);
-      padding: 1.5rem;
-      width: 240px;
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      line-height: 1.8;
-      box-shadow: 0 0 40px rgba(100,255,218,.05), inset 0 0 40px rgba(0,0,0,.3);
-      animation: floatCard 4s ease-in-out infinite;
-    }
-    @keyframes floatCard {
-      0%,100% { transform: translateY(0px); }
-      50%      { transform: translateY(-12px); }
-    }
-    .code-line { display: flex; gap: .5rem; }
-    .code-k  { color: var(--accent2); }
-    .code-v  { color: var(--accent); }
-    .code-s  { color: #ffb86c; }
-    .code-c  { color: var(--muted); }
-    .code-brace { color: var(--text); }
-    /* blinking cursor inside card */
-    .code-cursor {
-      display: inline-block;
-      width: 7px; height: 1em;
-      background: var(--accent);
-      animation: blink 1s step-end infinite;
-      vertical-align: text-bottom;
-      opacity: .8;
-    }
-    @keyframes blink { 0%,100%{opacity:.8} 50%{opacity:0} }
-
-    /* floating badges around card */
-    .float-badge {
-      position: absolute;
-      background: rgba(14,20,32,.95);
-      border: 1px solid var(--border);
-      padding: .4rem .8rem;
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      color: var(--muted);
-      white-space: nowrap;
-      animation: floatCard 4s ease-in-out infinite;
-    }
-    .float-badge i { color: var(--accent); margin-right: .4rem; }
-    .float-badge:nth-child(4) { top: 8%; right: 5%; animation-delay: -.5s; border-color: rgba(100,255,218,.2); color: var(--accent); }
-    .float-badge:nth-child(5) { bottom: 12%; left: 4%; animation-delay: -1.2s; border-color: rgba(123,140,255,.2); color: var(--accent2); }
-    .float-badge:nth-child(6) { top: 55%; right: 2%; animation-delay: -2s; }
-    #particles-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 60% 60% at 70% 50%, rgba(100,255,218,.07) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(123,140,255,.09) 0%, transparent 50%);
-    }
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(100,255,218,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(100,255,218,.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
-      will-change: transform;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-    }
-    .hero-tag {
-      font-family: var(--font-mono);
-      font-size: .8rem;
-      color: var(--accent);
-      letter-spacing: 3px;
-      margin-bottom: 1.5rem;
-      animation: fadeUp .8s .2s both;
-    }
-    .hero-name {
-      font-family: var(--font-head);
-      font-size: clamp(4rem, 10vw, 8rem);
-      line-height: .95;
-      color: var(--white);
-      letter-spacing: 4px;
-      animation: fadeUp .8s .4s both;
-      position: relative;
-    }
-    /* glitch effect */
-    .hero-name.glitch::before,
-    .hero-name.glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      font-family: var(--font-head);
-      font-size: inherit;
-      letter-spacing: inherit;
-      line-height: inherit;
-    }
-    .hero-name.glitch::before {
-      color: var(--accent);
-      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
-      transform: translateX(-4px);
-      animation: glitch1 .15s steps(1) forwards;
-    }
-    .hero-name.glitch::after {
-      color: var(--accent2);
-      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
-      transform: translateX(4px);
-      animation: glitch2 .15s steps(1) forwards;
-    }
-    @keyframes glitch1 { 0%,100% { transform: translateX(-4px); } 50% { transform: translateX(4px); } }
-    @keyframes glitch2 { 0%,100% { transform: translateX(4px); } 50% { transform: translateX(-4px); } }
-
-    .hero-typed {
-      font-family: var(--font-mono);
-      font-size: 1.1rem;
-      color: var(--muted);
-      margin: 1.5rem 0 2.5rem;
-      animation: fadeUp .8s .6s both;
-    }
-    .hero-btns {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      animation: fadeUp .8s .8s both;
-    }
-
-    /* ─── MAGNETIC BUTTON ─── */
-    .btn-primary-c {
-      padding: .8rem 2rem;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      background: transparent;
-      font-family: var(--font-mono);
-      font-size: .8rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: color .3s, transform .2s;
-      display: inline-block;
-    }
-    .btn-primary-c::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      transform: translateX(-101%);
-      transition: transform .3s;
-    }
-    .btn-primary-c:hover { color: var(--bg); }
-    .btn-primary-c:hover::before { transform: translateX(0); }
-    .btn-primary-c span { position: relative; z-index: 1; }
-    .btn-secondary-c {
-      padding: .8rem 2rem;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      background: transparent;
-      font-family: var(--font-mono);
-      font-size: .8rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: border-color .3s, color .3s, transform .2s;
-      display: inline-block;
-    }
-    .btn-secondary-c:hover { border-color: var(--accent2); color: var(--accent2); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 2rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: .5rem;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      letter-spacing: 2px;
-      animation: bounce 2s infinite;
-      text-decoration: none;
-    }
-    .hero-scroll i { color: var(--accent); }
-
-    /* ─── SECTIONS ─── */
-    section {
-      padding: 6rem 4rem;
-      position: relative;
-    }
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: .75rem;
-      color: var(--accent);
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      margin-bottom: .5rem;
-    }
-    .section-title {
-      font-family: var(--font-head);
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      color: var(--white);
-      letter-spacing: 3px;
-      margin-bottom: 3rem;
-    }
-    .section-title .dim {
-      color: var(--border);
-      -webkit-text-stroke: 1px rgba(255,255,255,.15);
-    }
-    .divider {
-      width: 60px; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      margin-bottom: 3rem;
-      box-shadow: 0 0 12px rgba(100,255,218,.4);
-    }
-
-    /* ─── ABOUT ─── */
-    #about { background: var(--bg2); }
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 4rem;
-      align-items: center;
-    }
-    .about-img-wrap {
-      position: relative;
-    }
-    .about-img-wrap img {
-      width: 100%;
-      max-width: 360px;
-      display: block;
-      filter: grayscale(20%);
-      border-radius: 2px;
-      transition: filter .4s;
-    }
-    .about-img-wrap:hover img { filter: grayscale(0%); }
-    .about-img-wrap::before {
-      content: '';
-      position: absolute;
-      inset: -12px;
-      border: 1px solid var(--accent);
-      border-radius: 2px;
-      top: 12px; left: 12px;
-      z-index: 0;
-      transition: transform .4s;
-    }
-    .about-img-wrap:hover::before { transform: translate(-4px, -4px); }
-    .about-img-wrap img { position: relative; z-index: 1; }
-
-    /* ─── COUNTER STATS ─── */
-    .stats-row {
-      display: flex; gap: 2rem; margin-bottom: 2rem;
-    }
-    .stat-item {
-      text-align: center;
-    }
-    .stat-num {
-      font-family: var(--font-head);
-      font-size: 2.5rem;
-      color: var(--accent);
-      letter-spacing: 2px;
-      line-height: 1;
-    }
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: .25rem;
-    }
-
-    .info-list { list-style: none; margin-bottom: 2rem; }
-    .info-list li {
-      padding: .6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: .95rem;
-      display: flex; gap: 1rem;
-      transition: padding-left .3s;
-    }
-    .info-list li:hover { padding-left: .5rem; }
-    .info-list li .lbl {
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: 1px;
-      min-width: 100px;
-      text-transform: uppercase;
-    }
-
-    /* ─── SKILLS ─── */
-    .skill-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: .9rem 1.1rem;
-      border: 1px solid var(--border);
-      margin-bottom: .75rem;
-      background: var(--card);
-      position: relative;
-      overflow: hidden;
-      transition: border-color .3s, transform .2s;
-    }
-    .skill-item:hover {
-      border-color: rgba(100,255,218,.3);
-      transform: translateX(4px);
-    }
-    .skill-item::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      background: linear-gradient(90deg, rgba(100,255,218,.08), transparent);
-      width: var(--fill, 0%);
-      transition: width 1.4s cubic-bezier(.17,.67,.4,1.2);
-    }
-    .skill-name {
-      font-family: var(--font-mono);
-      font-size: .78rem;
-      color: var(--text);
-      letter-spacing: 1px;
-      position: relative; z-index: 1;
-      display: flex; align-items: center; gap: .7rem;
-    }
-    .skill-name i { color: var(--accent); font-size: .9rem; }
-    .skill-level {
-      position: relative; z-index: 1;
-      display: flex; align-items: center; gap: .5rem;
-    }
-    .level-dots { display: flex; gap: 5px; }
-    .level-dot {
-      width: 8px; height: 8px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      transition: background .3s, border-color .3s, box-shadow .3s, transform .2s;
-    }
-    .level-dot.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 6px var(--accent); }
-    .level-dot.on.mid { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
-    .level-dot.on.low { background: #ffb86c; border-color: #ffb86c; box-shadow: 0 0 6px #ffb86c; }
-    .skill-item:hover .level-dot.on { transform: scale(1.3); }
-
-    /* Vibe coding special glow */
-    .skill-vibe {
-      border-color: rgba(192,132,252,.2) !important;
-      background: rgba(192,132,252,.03);
-    }
-    .skill-vibe::before {
-      background: linear-gradient(90deg, rgba(192,132,252,.1), transparent) !important;
-    }
-    .skill-vibe .skill-name { color: #e2bfff; }
-    .skill-vibe .skill-name i { color: #c084fc; }
-    @keyframes vibeGlow {
-      0%,100% { box-shadow: 0 0 8px #c084fc; }
-      50%      { box-shadow: 0 0 20px #c084fc, 0 0 40px rgba(192,132,252,.3); }
-    }
-    .skill-vibe:hover { border-color: rgba(192,132,252,.5) !important; }
-    .level-label {
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      min-width: 80px;
-      text-align: right;
-    }
-    .level-label.expert   { color: var(--accent); }
-    .level-label.advanced { color: var(--accent2); }
-    .level-label.inter    { color: var(--accent2); }
-    .level-label.beginner { color: #ffb86c; }
-
-    /* ─── PROGRAMS ─── */
-    .prog-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
-    .prog-badge {
-      display: flex; align-items: center; gap: .6rem;
-      padding: .6rem 1rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--muted);
-      transition: border-color .3s, color .3s, transform .2s, box-shadow .3s;
-    }
-    .prog-badge:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(100,255,218,.1);
-    }
-    .prog-badge img { width: 22px; height: 22px; object-fit: contain; }
-
-    /* ─── RESUME / GALLERY ─── */
-    #resume { background: var(--bg); }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      cursor: none;
-      border: 1px solid var(--border);
-      aspect-ratio: 4/3;
-      background: var(--card);
-      transition: border-color .3s, box-shadow .3s;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-    .gallery-item:hover {
-      border-color: rgba(100,255,218,.3);
-      box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 30px rgba(100,255,218,.05);
-    }
-    .gallery-item img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform .5s ease, filter .5s;
-      filter: grayscale(30%);
-      pointer-events: none;
-    }
-    .gallery-item:hover img { transform: scale(1.08); filter: grayscale(0); }
-    .gallery-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(8,12,20,.9), transparent 60%);
-      opacity: 0;
-      transition: opacity .4s;
-      display: flex; align-items: flex-end;
-      padding: 1rem;
-    }
-    .gallery-item:hover .gallery-overlay { opacity: 1; }
-    .gallery-overlay span {
-      font-family: var(--font-mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: 2px;
-    }
-    .gallery-num {
-      position: absolute;
-      top: .8rem; left: .8rem;
-      font-family: var(--font-head);
-      font-size: 3rem;
-      color: rgba(100,255,218,.08);
-      line-height: 1;
-      pointer-events: none;
-      transition: color .4s, font-size .4s;
-    }
-    .gallery-item:hover .gallery-num {
-      color: rgba(100,255,218,.15);
-      font-size: 3.5rem;
-    }
-    /* corner accent */
-    .gallery-item::after {
-      content: '';
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 30px; height: 30px;
-      border-right: 1px solid var(--accent);
-      border-bottom: 1px solid var(--accent);
-      opacity: 0;
-      transition: opacity .3s, width .3s, height .3s;
-    }
-    .gallery-item:hover::after { opacity: 1; width: 40px; height: 40px; }
-
-    /* ─── LIGHTBOX ─── */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(8,12,20,.96);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s;
-      backdrop-filter: blur(16px);
-    }
-    .lightbox.active { opacity: 1; pointer-events: all; }
-    .lightbox img {
-      max-width: 90vw;
-      max-height: 85vh;
-      object-fit: contain;
-      border: 1px solid var(--border);
-      animation: zoomIn .3s ease;
-    }
-    @keyframes zoomIn {
-      from { transform: scale(.9); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 1.5rem; right: 1.5rem;
-      font-size: 1.5rem;
-      color: var(--muted);
-      cursor: none;
-      font-family: var(--font-mono);
-      transition: color .2s;
-    }
-    .lightbox-close:hover { color: var(--accent); }
-
-    /* ─── FLOATING SIDE ELEMENTS ─── */
-    .side-links {
-      position: fixed;
-      left: 2rem;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      z-index: 10;
-    }
-    .side-links::after {
-      content: '';
-      width: 1px;
-      height: 80px;
-      background: linear-gradient(to bottom, var(--muted), transparent);
-    }
-    .side-links a {
-      color: var(--muted);
-      font-size: .85rem;
-      text-decoration: none;
-      transition: color .2s, transform .2s;
-    }
-    .side-links a:hover { color: var(--accent); transform: translateY(-3px); }
-
-    .side-email {
-      position: fixed;
-      right: 2rem;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      z-index: 10;
-    }
-    .side-email::after {
-      content: '';
-      width: 1px;
-      height: 80px;
-      background: linear-gradient(to bottom, var(--muted), transparent);
-    }
-    .side-email a {
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-decoration: none;
-      writing-mode: vertical-rl;
-      transition: color .2s, transform .2s;
-    }
-    .side-email a:hover { color: var(--accent); transform: translateY(-3px); }
-
-    /* ─── SCROLL UP BUTTON ─── */
-    #scrollTop {
-      position: fixed;
-      bottom: 2rem; right: 2rem;
-      width: 44px; height: 44px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      font-size: 1rem;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: none;
-      z-index: 50;
-      transition: background .2s, border-color .2s, transform .2s;
-    }
-    #scrollTop:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: translateY(-3px); }
-    #scrollTop.visible { display: flex; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      padding: 2rem 4rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    footer p { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
-    .social-links { display: flex; gap: 1rem; }
-    .social-links a {
-      width: 38px; height: 38px;
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--muted);
-      font-size: .9rem;
-      text-decoration: none;
-      transition: border-color .2s, color .2s, transform .2s, box-shadow .2s;
-    }
-    .social-links a:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(100,255,218,.15);
-    }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes bounce {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50%      { transform: translateX(-50%) translateY(8px); }
-    }
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ─── RIPPLE ─── */
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(100,255,218,.15);
-      transform: scale(0);
-      animation: ripple-anim .6s linear;
-      pointer-events: none;
-    }
-    @keyframes ripple-anim {
-      to { transform: scale(4); opacity: 0; }
-    }
-
-    /* ─── MOBILE ─── */
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,12,20,.97); padding: 2rem; gap: 1.5rem; }
-      .nav-links.open { display: flex; }
-      .hamburger { display: flex; }
-      #hero { padding: 0 1.5rem; grid-template-columns: 1fr; }
-      .hero-visual { display: none; }
-      section { padding: 4rem 1.5rem; }
-      .about-grid { grid-template-columns: 1fr; }
-      .about-img-wrap { margin: 0 auto; }
-      footer { flex-direction: column; gap: 1rem; text-align: center; }
-      .side-links, .side-email { display: none; }
-      body { cursor: auto; }
-      #cursor-dot, #cursor-ring { display: none; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- PROGRESS BAR -->
-<div id="progress-bar"></div>
+  <!-- PROGRESS BAR -->
+  <div id="progress-bar"></div>
 
-<!-- CUSTOM CURSOR -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
+  <!-- CUSTOM CURSOR -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
 
-<!-- NAVBAR -->
-<nav id="navbar">
-  <div class="nav-logo">REW<span>.</span></div>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#hero"   data-num="01">Home</a></li>
-    <li><a href="#about"  data-num="02">About</a></li>
-    <li><a href="#resume" data-num="03">Resume</a></li>
-  </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleNav()">
-    <span></span><span></span><span></span>
-  </div>
-</nav>
-
-<!-- SIDE LINKS -->
-<div class="side-links">
-  <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"><i class="fab fa-facebook-f"></i></a>
-  <a href="https://github.com/RewSuphakit" target="_blank"><i class="fab fa-github"></i></a>
-</div>
-<div class="side-email">
-  <a href="mailto:rew@example.com">rew@student.kktech.ac.th</a>
-</div>
-
-<!-- HERO -->
-<section id="hero">
-  <canvas id="particles-canvas"></canvas>
-  <div class="hero-bg"></div>
-  <div class="hero-grid" id="heroGrid"></div>
-
-  <!-- LEFT -->
-  <div class="hero-content">
-    <p class="hero-tag">// Full-Stack Developer</p>
-    <h1 class="hero-name" id="heroName" data-text="">
-      <span id="typed-name"></span>
-    </h1>
-    <p class="hero-typed"><span id="typed-role"></span></p>
-    <div class="hero-btns">
-      <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank" class="btn-primary-c magnetic"><span><i class="fab fa-facebook" style="margin-right:.5rem"></i>Facebook</span></a>
-      <a href="https://github.com/RewSuphakit" target="_blank" class="btn-secondary-c magnetic"><i class="fab fa-github" style="margin-right:.5rem"></i>GitHub</a>
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-logo">REW<span>.</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" data-num="01">Home</a></li>
+      <li><a href="#about" data-num="02">About</a></li>
+      <li><a href="#resume" data-num="03">Resume</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
     </div>
-  </div>
+  </nav>
 
-  <!-- RIGHT -->
-  <div class="hero-visual">
-    <div class="orbit"></div>
-    <div class="orbit"></div>
-    <div class="orbit"></div>
-    <div class="float-badge"><i class="fab fa-html5"></i>HTML Expert</div>
-    <div class="float-badge"><i class="fab fa-js-square"></i>JavaScript</div>
-    <div class="float-badge"><i class="fab fa-php"></i>PHP Dev</div>
-    <div class="hero-code-card">
-      <div class="code-line"><span class="code-k">const</span><span style="color:var(--text)"> dev</span><span class="code-brace"> = {</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-s">name</span><span class="code-c">:</span><span class="code-v"> "Rew"</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-s">role</span><span class="code-c">:</span><span class="code-v"> "Full-Stack"</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-s">age</span><span class="code-c">:</span><span class="code-v"> 20</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-s">skills</span><span class="code-c">: [</span></div>
-      <div class="code-line" style="padding-left:2rem"><span class="code-v">"HTML"</span><span class="code-c">, </span><span class="code-v">"CSS"</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:2rem"><span class="code-v">"PHP"</span><span class="code-c">, </span><span class="code-v">"MySQL"</span><span class="code-c">,</span></div>
-      <div class="code-line" style="padding-left:2rem"><span class="code-v">"React"</span><span class="code-c">, </span><span class="code-v">"Node.js"</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-c">],</span></div>
-      <div class="code-line" style="padding-left:1rem"><span class="code-s">status</span><span class="code-c">:</span><span class="code-v"> "Open"</span></div>
-      <div class="code-line"><span class="code-brace">}</span><span class="code-cursor"></span></div>
-    </div>
-  </div>
-
-  <a href="#about" class="hero-scroll">
-    <span>Scroll</span>
-    <i class="fas fa-arrow-down"></i>
-  </a>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-label">02 — About</div>
-  <h2 class="section-title">Who Am <span class="dim">I</span></h2>
-  <div class="divider reveal"></div>
-  <div class="about-grid">
-    <div class="about-img-wrap reveal">
-      <img src="img/AA.png" alt="Suphakit" onerror="this.src='https://placehold.co/360x400/0e1420/64ffda?text=REW'">
-    </div>
-    <div>
-      <!-- COUNTER STATS -->
-      <div class="stats-row reveal">
-        <div class="stat-item">
-          <div class="stat-num" data-target="3">0</div>
-          <div class="stat-label">Years Coding</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="20">0</div>
-          <div class="stat-label">Projects Done</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" data-target="8">0</div>
-          <div class="stat-label">Skills</div>
-        </div>
-      </div>
-
-      <ul class="info-list reveal">
-        <li><span class="lbl">Name</span><span>นาย ศุภกิจ หล่มเหลา</span></li>
-        <li><span class="lbl">Nickname</span><span>ริว (Rew)</span></li>
-        <li><span class="lbl">Age</span><span>20 ปี</span></li>
-        <li><span class="lbl">Department</span><span>เทคโนโลยีสารสนเทศ (IT)</span></li>
-        <li><span class="lbl">College</span><span>วิทยาลัยเทคนิคขอนแก่น</span></li>
-      </ul>
-
-      <div class="reveal" style="margin-bottom:2rem">
-        <p class="section-label" style="margin-bottom:1rem">Programs</p>
-        <div class="prog-grid">
-          <div class="prog-badge"><img src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png" alt="VSCode"> VS Code</div>
-          <div class="prog-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Adobe_Photoshop_CS6_icon.png" alt="PS"> Photoshop</div>
-          <div class="prog-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Adobe_Premiere_Pro_CS6_Icon.png" alt="PR"> Premiere</div>
-          <div class="prog-badge"><img src="https://cdn.icon-icons.com/icons2/1381/PNG/512/xampp_94513.png" alt="XAMPP"> XAMPP</div>
-        </div>
-      </div>
-
-      <div class="reveal" id="skills-block">
-        <p class="section-label" style="margin-bottom:1.5rem">Skills</p>
-        <div class="skill-item" style="--fill:100%">
-          <div class="skill-name"><i class="fab fa-html5"></i> HTML</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div>
-            </div>
-            <span class="level-label expert">Expert</span>
-          </div>
-        </div>
-        <div class="skill-item" style="--fill:70%">
-          <div class="skill-name"><i class="fab fa-css3-alt"></i> CSS</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label advanced">Advanced</span>
-          </div>
-        </div>
-        <div class="skill-item" style="--fill:60%">
-          <div class="skill-name"><i class="fab fa-js-square"></i> JavaScript</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label inter">Intermediate</span>
-          </div>
-        </div>
-        <div class="skill-item" style="--fill:70%">
-          <div class="skill-name"><i class="fab fa-php"></i> PHP</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label advanced">Advanced</span>
-          </div>
-        </div>
-        <div class="skill-item" style="--fill:40%">
-          <div class="skill-name"><i class="fas fa-database"></i> MySQL</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on low"></div><div class="level-dot on low"></div><div class="level-dot"></div><div class="level-dot"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label beginner">Beginner</span>
-          </div>
-        </div>
-
-        <div class="skill-item" style="--fill:55%">
-          <div class="skill-name"><i class="fab fa-react"></i> React</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label inter">Intermediate</span>
-          </div>
-        </div>
-
-        <div class="skill-item" style="--fill:50%">
-          <div class="skill-name"><i class="fab fa-node-js"></i> Node.js</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot on mid"></div><div class="level-dot"></div><div class="level-dot"></div>
-            </div>
-            <span class="level-label inter">Intermediate</span>
-          </div>
-        </div>
-
-        <div class="skill-item skill-vibe" style="--fill:90%">
-          <div class="skill-name"><i class="fas fa-wand-magic-sparkles"></i> Vibe Coding</div>
-          <div class="skill-level">
-            <div class="level-dots">
-              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on" style="background:#c084fc;border-color:#c084fc;box-shadow:0 0 8px #c084fc"></div>
-            </div>
-            <span class="level-label" style="color:#c084fc">Pro Viber</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- RESUME / GALLERY -->
-<section id="resume">
-  <div class="section-label">03 — Resume</div>
-  <h2 class="section-title">Past <span class="dim">Work</span></h2>
-  <div class="divider reveal"></div>
-  <div class="gallery-grid">
-    <div class="gallery-item reveal tilt-card" onclick="openLight('img/OP.jpg')">
-      <div class="gallery-num">01</div>
-      <img src="img/OP.jpg" alt="Work 1" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+01'">
-      <div class="gallery-overlay"><span>View Project →</span></div>
-    </div>
-    <div class="gallery-item reveal tilt-card" onclick="openLight('img/rov.jpg')">
-      <div class="gallery-num">02</div>
-      <img src="img/rov.jpg" alt="Work 2" onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+02'">
-      <div class="gallery-overlay"><span>View Project →</span></div>
-    </div>
-    <div class="gallery-item reveal tilt-card" onclick="openLight('img/LL.jpg')">
-      <div class="gallery-num">03</div>
-      <img src="img/LL.jpg" alt="Work 3" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+03'">
-      <div class="gallery-overlay"><span>View Project →</span></div>
-    </div>
-    <div class="gallery-item reveal tilt-card" onclick="openLight('img/VB.png')">
-      <div class="gallery-num">04</div>
-      <img src="img/VB.png" alt="Work 4" onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+04'">
-      <div class="gallery-overlay"><span>View Project →</span></div>
-    </div>
-    <div class="gallery-item reveal tilt-card" onclick="openLight('img/LD.jpg')">
-      <div class="gallery-num">05</div>
-      <img src="img/LD.jpg" alt="Work 5" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+05'">
-      <div class="gallery-overlay"><span>View Project →</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2024 — ศุภกิจ หล่มเหลา (Rew) · วิทยาลัยเทคนิคขอนแก่น</p>
-  <div class="social-links">
-    <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"><i class="fab fa-facebook-f"></i></a>
+  <!-- SIDE LINKS -->
+  <div class="side-links">
+    <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"><i
+        class="fab fa-facebook-f"></i></a>
     <a href="https://github.com/RewSuphakit" target="_blank"><i class="fab fa-github"></i></a>
   </div>
-</footer>
+  <div class="side-email">
+    <a href="mailto:rew@example.com">suphakit.lo@rmuti.ac.th</a>
+  </div>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLight(event)">
-  <span class="lightbox-close" onclick="closeLightDirect()">✕ Close</span>
-  <img src="" alt="" id="lightbox-img">
-</div>
+  <!-- HERO -->
+  <section id="hero">
+    <canvas id="particles-canvas"></canvas>
+    <div class="hero-bg"></div>
+    <div class="hero-grid" id="heroGrid"></div>
 
-<!-- SCROLL TOP -->
-<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-  <i class="fas fa-arrow-up"></i>
-</button>
+    <!-- LEFT -->
+    <div class="hero-content">
+      <p class="hero-tag">// Full-Stack Developer</p>
+      <h1 class="hero-name" id="heroName" data-text="">
+        <span id="typed-name"></span>
+      </h1>
+      <p class="hero-typed"><span id="typed-role"></span></p>
+      <div class="hero-btns">
+        <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"
+          class="btn-primary-c magnetic"><span><i class="fab fa-facebook"
+              style="margin-right:.5rem"></i>Facebook</span></a>
+        <a href="https://github.com/RewSuphakit" target="_blank" class="btn-secondary-c magnetic"><i
+            class="fab fa-github" style="margin-right:.5rem"></i>GitHub</a>
+      </div>
+    </div>
 
-<script>
-// ── Typed.js ──
-new Typed('#typed-name', {
-  strings: ['REW.', 'SUPHAKIT.'],
-  typeSpeed: 80,
-  backDelay: 3000,
-  backSpeed: 50,
-  loop: true,
-  showCursor: true,
-  cursorChar: '_',
-  onStringTyped: () => {
-    triggerGlitch();
-  }
-});
-new Typed('#typed-role', {
-  strings: ['Full-Stack Developer', 'IT Student @ KKT', 'Web Designer'],
-  typeSpeed: 60,
-  backDelay: 2500,
-  backSpeed: 40,
-  loop: true,
-  showCursor: false,
-});
+    <!-- RIGHT -->
+    <div class="hero-visual">
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <div class="float-badge"><i class="fab fa-js-square"></i>JavaScript</div>
+      <div class="float-badge"><i class="fab fa-php"></i>PHP Dev</div>
+      <div class="float-badge"><i class="fab fa-react"></i>React</div>
+      <div class="float-badge"><i class="fab fa-node-js"></i>Node JS</div>
+      <div class="float-badge"><i class="fab fa-docker"></i>Docker</div>
 
-// ── Glitch effect ──
-function triggerGlitch() {
-  const el = document.getElementById('heroName');
-  el.dataset.text = el.textContent;
-  el.classList.add('glitch');
-  setTimeout(() => el.classList.remove('glitch'), 300);
-}
+      <div class="hero-code-card">
+        <div class="code-line"><span class="code-k">const</span><span style="color:var(--text)"> dev</span><span
+            class="code-brace"> = {</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-s">name</span><span
+            class="code-c">:</span><span class="code-v"> "Rew"</span><span class="code-c">,</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-s">role</span><span
+            class="code-c">:</span><span class="code-v"> "Full-Stack"</span><span class="code-c">,</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-s">age</span><span
+            class="code-c">:</span><span class="code-v"> 23</span><span class="code-c">,</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-s">skills</span><span class="code-c">:
+            [</span></div>
+        <div class="code-line" style="padding-left:2rem"><span class="code-v">"HTML"</span><span class="code-c">,
+          </span><span class="code-v">"CSS"</span><span class="code-c">,</span></div>
+        <div class="code-line" style="padding-left:2rem"><span class="code-v">"PHP"</span><span class="code-c">,
+          </span><span class="code-v">"MySQL"</span><span class="code-c">,</span></div>
+        <div class="code-line" style="padding-left:2rem"><span class="code-v">"React"</span><span class="code-c">,
+          </span><span class="code-v">"Node.js"</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-c">],</span></div>
+        <div class="code-line" style="padding-left:1rem"><span class="code-s">status</span><span
+            class="code-c">:</span><span class="code-v"> "Open"</span></div>
+        <div class="code-line"><span class="code-brace">}</span><span class="code-cursor"></span></div>
+      </div>
+    </div>
 
-// ── Custom Cursor ──
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
-let ringX = 0, ringY = 0;
-let curX = 0, curY = 0;
+    <a href="#about" class="hero-scroll">
+      <span>Scroll</span>
+      <i class="fas fa-arrow-down"></i>
+    </a>
+  </section>
 
-document.addEventListener('mousemove', e => {
-  curX = e.clientX; curY = e.clientY;
-  dot.style.left = curX + 'px';
-  dot.style.top  = curY + 'px';
-});
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">02 — About</div>
+    <h2 class="section-title">Who Am <span class="dim">I</span></h2>
+    <div class="divider reveal"></div>
+    <div class="about-grid">
+      <div class="about-img-wrap reveal">
+        <img src="img/EE.jpg" alt="Suphakit" onerror="this.src='https://placehold.co/360x400/0e1420/64ffda?text=REW'">
+      </div>
+      <div>
+        <!-- COUNTER STATS -->
+        <div class="stats-row reveal">
+          <div class="stat-item">
+            <div class="stat-num" data-target="3">0</div>
+            <div class="stat-label">Years Coding</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="20">0</div>
+            <div class="stat-label">Projects Done</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="8">0</div>
+            <div class="stat-label">Skills</div>
+          </div>
+        </div>
 
-function animateRing() {
-  ringX += (curX - ringX) * 0.12;
-  ringY += (curY - ringY) * 0.12;
-  ring.style.left = ringX + 'px';
-  ring.style.top  = ringY + 'px';
-  requestAnimationFrame(animateRing);
-}
-animateRing();
+        <ul class="info-list reveal">
+          <li><span class="lbl">Name</span><span>นาย ศุภกิจ หล่มเหลา</span></li>
+          <li><span class="lbl">Nickname</span><span>ริว (Rew)</span></li>
+          <li><span class="lbl">Age</span><span>23 ปี</span></li>
+          <li><span class="lbl">Department</span><span>ครุศาสตร์คอมพิวเตอร์</span></li>
+          <li><span class="lbl">College</span><span>มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน วิทยาเขตขอนแก่น</span></li>
+        </ul>
 
-document.querySelectorAll('a, button, .gallery-item, .prog-badge, .skill-item').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-});
+        <div class="reveal" style="margin-bottom:2rem">
+          <p class="section-label" style="margin-bottom:1rem">Programs</p>
+          <div class="prog-grid">
+            <div class="prog-badge"><img
+                src="https://cdn.icon-icons.com/icons2/2107/PNG/512/file_type_vscode_icon_130084.png" alt="VSCode"> VS
+              Code</div>
+            <div class="prog-badge"><img
+                src="https://upload.wikimedia.org/wikipedia/commons/b/be/Adobe_Photoshop_CS6_icon.png" alt="PS">
+              Photoshop</div>
+            <div class="prog-badge"><img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/58/Adobe_Premiere_Pro_CS6_Icon.png" alt="PR">
+              Premiere</div>
+            <div class="prog-badge"><img src="https://cdn.icon-icons.com/icons2/1381/PNG/512/xampp_94513.png"
+                alt="XAMPP"> XAMPP</div>
+          </div>
 
-// ── Scroll Progress Bar ──
-window.addEventListener('scroll', () => {
-  const total = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = (window.scrollY / total) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
+        </div>
 
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
-  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 300);
-  revealElements();
-  animateSkills();
-  animateCounters();
-  parallaxGrid();
-});
+        <div class="reveal" id="skills-block">
+          <p class="section-label" style="margin-bottom:1.5rem">Skills</p>
 
-// ── Parallax Hero Grid ──
-function parallaxGrid() {
-  const grid = document.getElementById('heroGrid');
-  const y = window.scrollY;
-  grid.style.transform = `translateY(${y * 0.3}px)`;
-}
+          <div class="skill-item" style="--fill:70%">
+            <div class="skill-name"><i class="fab fa-css3-alt"></i> CSS</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label advanced">Advanced</span>
+            </div>
+          </div>
+          <div class="skill-item" style="--fill:60%">
+            <div class="skill-name"><i class="fab fa-js-square"></i> JavaScript</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label inter">Intermediate</span>
+            </div>
+          </div>
+          <div class="skill-item" style="--fill:70%">
+            <div class="skill-name"><i class="fab fa-php"></i> PHP</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label advanced">Advanced</span>
+            </div>
+          </div>
+          <div class="skill-item" style="--fill:40%">
+            <div class="skill-name"><i class="fas fa-database"></i> MySQL</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on low"></div>
+                <div class="level-dot on low"></div>
+                <div class="level-dot"></div>
+                <div class="level-dot"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label beginner">Beginner</span>
+            </div>
+          </div>
 
-// ── Reveal on scroll ──
-function revealElements() {
-  document.querySelectorAll('.reveal').forEach((el, i) => {
-    if (el.getBoundingClientRect().top < window.innerHeight - 80) {
-      setTimeout(() => el.classList.add('visible'), i * 60);
-    }
-  });
-}
-revealElements();
+          <div class="skill-item" style="--fill:55%">
+            <div class="skill-name"><i class="fab fa-react"></i> React</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label inter">Intermediate</span>
+            </div>
+          </div>
 
-// ── Skill animation ──
-let skillsAnimated = false;
-function animateSkills() {
-  if (skillsAnimated) return;
-  const block = document.getElementById('skills-block');
-  if (!block) return;
-  if (block.getBoundingClientRect().top < window.innerHeight - 60) {
-    document.querySelectorAll('.skill-item').forEach((el, i) => {
-      setTimeout(() => {
-        el.querySelectorAll('.level-dot.on').forEach((dot, j) => {
-          dot.style.opacity = '0';
-          setTimeout(() => { dot.style.opacity = '1'; }, j * 120);
-        });
-      }, i * 120);
-    });
-    skillsAnimated = true;
-  }
-}
+          <div class="skill-item" style="--fill:50%">
+            <div class="skill-name"><i class="fab fa-node-js"></i> Node.js</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot on mid"></div>
+                <div class="level-dot"></div>
+                <div class="level-dot"></div>
+              </div>
+              <span class="level-label inter">Intermediate</span>
+            </div>
+          </div>
 
-// ── Counter Animation ──
-let countersAnimated = false;
-function animateCounters() {
-  if (countersAnimated) return;
-  const counters = document.querySelectorAll('.stat-num[data-target]');
-  if (!counters.length) return;
-  const first = counters[0].getBoundingClientRect().top;
-  if (first > window.innerHeight - 60) return;
+          <div class="skill-item skill-vibe" style="--fill:90%">
+            <div class="skill-name"><i class="fas fa-wand-magic-sparkles"></i> Vibe Coding</div>
+            <div class="skill-level">
+              <div class="level-dots">
+                <div class="level-dot on"></div>
+                <div class="level-dot on"></div>
+                <div class="level-dot on"></div>
+                <div class="level-dot on"></div>
+                <div class="level-dot on" style="background:#c084fc;border-color:#c084fc;box-shadow:0 0 8px #c084fc">
+                </div>
+              </div>
+              <span class="level-label" style="color:#c084fc">Pro Viber</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  counters.forEach(el => {
-    const target = +el.dataset.target;
-    let current = 0;
-    const step = Math.ceil(target / 40);
-    const timer = setInterval(() => {
-      current += step;
-      if (current >= target) { current = target; clearInterval(timer); }
-      el.textContent = current + '+';
-    }, 40);
-  });
-  countersAnimated = true;
-}
+  <!-- RESUME / GALLERY -->
+  <section id="resume">
+    <div class="section-label">03 — Resume</div>
+    <h2 class="section-title">Past <span class="dim">Work</span></h2>
+    <div class="divider reveal"></div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal tilt-card" onclick="openLight('img/OP.jpg')">
+        <div class="gallery-num">01</div>
+        <img src="img/OP.jpg" alt="Work 1" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+01'">
+        <div class="gallery-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="gallery-item reveal tilt-card" onclick="openLight('img/rov.jpg')">
+        <div class="gallery-num">02</div>
+        <img src="img/rov.jpg" alt="Work 2"
+          onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+02'">
+        <div class="gallery-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="gallery-item reveal tilt-card" onclick="openLight('img/LL.jpg')">
+        <div class="gallery-num">03</div>
+        <img src="img/LL.jpg" alt="Work 3" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+03'">
+        <div class="gallery-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="gallery-item reveal tilt-card" onclick="openLight('img/VB.png')">
+        <div class="gallery-num">04</div>
+        <img src="img/VB.png" alt="Work 4" onerror="this.src='https://placehold.co/600x400/0e1420/7b8cff?text=Work+04'">
+        <div class="gallery-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="gallery-item reveal tilt-card" onclick="openLight('img/LD.jpg')">
+        <div class="gallery-num">05</div>
+        <img src="img/LD.jpg" alt="Work 5" onerror="this.src='https://placehold.co/600x400/0e1420/64ffda?text=Work+05'">
+        <div class="gallery-overlay"><span>View Project →</span></div>
+      </div>
+    </div>
+  </section>
 
-// ── Tilt Effect on Gallery Cards ──
-document.querySelectorAll('.tilt-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const rotX = ((y - cy) / cy) * -8;
-    const rotY = ((x - cx) / cx) * 8;
-    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
-  });
-});
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 — ศุภกิจ หล่มเหลา (Rew) · มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน วิทยาเขตขอนแก่น</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com/profile.php?id=100010516696466" target="_blank"><i
+          class="fab fa-facebook-f"></i></a>
+      <a href="https://github.com/RewSuphakit" target="_blank"><i class="fab fa-github"></i></a>
+    </div>
+  </footer>
 
-// ── Magnetic Buttons ──
-document.querySelectorAll('.magnetic').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0, 0)';
-  });
-});
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLight(event)">
+    <span class="lightbox-close" onclick="closeLightDirect()">✕ Close</span>
+    <img src="" alt="" id="lightbox-img">
+  </div>
 
-// ── Ripple Effect on Buttons ──
-document.querySelectorAll('.btn-primary-c, .btn-secondary-c').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const r = document.createElement('span');
-    r.className = 'ripple';
-    const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
-    btn.appendChild(r);
-    setTimeout(() => r.remove(), 600);
-  });
-});
+  <!-- SCROLL TOP -->
+  <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
-// ── Particle System ──
-(function() {
-  const canvas = document.getElementById('particles-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function rand(a, b) { return Math.random() * (b - a) + a; }
-
-  class Particle {
-    constructor() { this.reset(); }
-    reset() {
-      this.x = rand(0, W);
-      this.y = rand(0, H);
-      this.size = rand(0.5, 2);
-      this.speed = rand(0.1, 0.4);
-      this.angle = rand(0, Math.PI * 2);
-      this.opacity = rand(0.1, 0.5);
-      this.color = Math.random() > 0.5 ? '100,255,218' : '123,140,255';
-    }
-    update() {
-      this.x += Math.cos(this.angle) * this.speed;
-      this.y += Math.sin(this.angle) * this.speed;
-      this.angle += 0.005;
-      if (this.x < -10 || this.x > W+10 || this.y < -10 || this.y > H+10) this.reset();
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${this.color},${this.opacity})`;
-      ctx.fill();
-    }
-  }
-
-  for (let i = 0; i < 80; i++) particles.push(new Particle());
-
-  // draw connections
-  function drawLines() {
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(100,255,218,${0.06 * (1 - dist/120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function loop() {
-    ctx.clearRect(0, 0, W, H);
-    drawLines();
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(loop);
-  }
-  loop();
-})();
-
-// ── Lightbox ──
-function openLight(src) {
-  const lb = document.getElementById('lightbox');
-  document.getElementById('lightbox-img').src = src;
-  lb.classList.add('active');
-}
-function closeLight(e) {
-  if (e.target === document.getElementById('lightbox')) closeLightDirect();
-}
-function closeLightDirect() {
-  document.getElementById('lightbox').classList.remove('active');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLightDirect();
-});
-
-// ── Hamburger ──
-function toggleNav() {
-  document.getElementById('navLinks').classList.toggle('open');
-}
-</script>
+  <script src="script.js"></script>
 
 </body>
+
 </html>
